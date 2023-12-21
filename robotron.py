@@ -98,7 +98,7 @@ def move_robot(dx, dy):
             board[robo_pos[1]][robo_pos[0]] = 3
             robo_pos[0] = new_x
             robo_pos[1] = new_y
-        elif board[new_y][new_x] == 2:
+        elif board[new_y][new_x] == 2 and board[robo_pos[1]][robo_pos[0]-1] !=2:
             ROOM_NUMBER+=1
             board[robo_pos[1]][robo_pos[0]] = 3
             robo_pos[0] = new_x - (8*dx)
@@ -117,7 +117,7 @@ def find_last_position(x, y, dx, dy):
     return None
 
 # Robo start position
-robo_pos = [1, 4]
+robo_pos = [0, 4]
 
 # Test
 #wall_pos = [4,4]
@@ -147,10 +147,10 @@ while running:
                 move_robot(0, 1)
                             
                             
-    # Print grid to check if work
-    for row in board:
-        print(row)
-    print("xxxxxxxxx")
+            # Print grid to check if work
+            for row in board:
+                print(row)
+            print("xxxxxxxxx")
       
     
     pygame.display.flip()
