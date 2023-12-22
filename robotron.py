@@ -22,7 +22,8 @@ robo_image = pygame.image.load('robo.bmp').convert_alpha()
 door_image = pygame.image.load('door.bmp').convert_alpha()
 space_image = pygame.image.load('space.bmp').convert_alpha()
 dinamico_image = pygame.image.load('dinamico.bmp').convert_alpha()
-dinexplo_image = pygame.image.load('dinexplo.bmp').convert_alpha() 
+dinexplo_image = pygame.image.load('dinexplo.bmp').convert_alpha()
+explo_image = pygame.image.load('explo.bmp').convert_alpha()  
 
 image_map = {
     0: wall_image,        # Wall index = 0
@@ -30,7 +31,8 @@ image_map = {
     2: door_image,        # Door index = 2
     3: space_image,       # Space index = 3
     4: dinamico_image,   # Dinamico index = 4
-    5: dinexplo_image    # Dinexplo index = 5
+    5: dinexplo_image,    # Dinexplo index = 5
+    6: explo_image         # Explo index = 6
 }
 
 # Create a 2D list representing the board
@@ -49,11 +51,15 @@ def draw_board(room):
 
         if row != 8:
             if i == "0":
-                board[col][row] = 3
+                board[col][row] = 3 # space
             elif i == "1":
-                board[col][row] = 0
+                board[col][row] = 0 # wall
             elif i == "2":
-                board[col][row] = 4
+                board[col][row] = 4 # dinamico
+            elif i == "3":
+                board[col][row] = 6 # explo
+            elif i == "4":
+                board[col][row] = 5 # dinexplo
 
             row += 1
                 
