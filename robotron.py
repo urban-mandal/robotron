@@ -8,7 +8,7 @@ CELL_SIZE = 32
 BOARD_SIZE = 9
 HEIGHT = BOARD_SIZE * CELL_SIZE
 WIDTH = BOARD_SIZE * CELL_SIZE
-ROOM_NUMBER = 0
+ROOM_NUMBER = 13
 
 # makes a menu
 
@@ -57,8 +57,7 @@ def menu():
 
 
 menu()
-
-roomcounter()
+pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Robotron")
 clock = pygame.time.Clock()
@@ -78,6 +77,8 @@ boom2 = pygame.image.load('boom2.bmp').convert_alpha()
 boom3 = pygame.image.load('boom3.bmp').convert_alpha()
 boom4 = pygame.image.load('boom4.bmp').convert_alpha()
 boom5 = pygame.image.load('boom5.bmp').convert_alpha()
+# sounds
+boom = pygame.mixer.Sound('boomsound.wav')
 image_map = {
     0: wall_image,        # Wall index = 0
     1: robo_image,        # Robo index = 1
@@ -199,6 +200,7 @@ def move_robot(dx, dy):
                     screen.blit(
                         boom1, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
                     pygame.display.flip()
+                    pygame.mixer.Sound.play(boom)
                     time.sleep(0.02)
                     screen.blit(
                         boom2, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
@@ -247,6 +249,7 @@ def move_robot(dx, dy):
                     screen.blit(
                         boom1, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
                     pygame.display.flip()
+                    pygame.mixer.Sound.play(boom)
                     time.sleep(0.02)
                     screen.blit(
                         boom2, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
