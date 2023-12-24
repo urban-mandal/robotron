@@ -1,14 +1,14 @@
 import pygame
 import sys
 from rooms import *
-
+import time
 # Constants
 ROWS, COLS = 9, 9
 CELL_SIZE = 32
 BOARD_SIZE = 9
 HEIGHT = BOARD_SIZE * CELL_SIZE
 WIDTH = BOARD_SIZE * CELL_SIZE
-ROOM_NUMBER = 0
+ROOM_NUMBER = 13
 
 # makes a menu
 
@@ -21,9 +21,9 @@ def menu():
     play_button = pygame.image.load('play_button.png').convert_alpha()
     logo = pygame.image.load('logo2.png').convert_alpha()
     screen_menu.fill((255, 255, 255))
-    screen_menu.blit(play_button, (4 * CELL_SIZE, 6 * CELL_SIZE))
+    screen_menu.blit(play_button, (119, 6 * CELL_SIZE))
     screen_menu.blit(logo, (16, 0))
-    button = pygame.Rect((4 * CELL_SIZE, 6 * CELL_SIZE), (50, 50))
+    button = pygame.Rect((119, 6 * CELL_SIZE), (50, 50))
     pygame.display.update()
     a = True
     while a == True:
@@ -57,6 +57,8 @@ space_image = pygame.image.load('space.bmp').convert_alpha()
 dinamico_image = pygame.image.load('dinamico.bmp').convert_alpha()
 dinexplo_image = pygame.image.load('dinexplo.bmp').convert_alpha()
 explo_image = pygame.image.load('explo.bmp').convert_alpha()
+game_over = pygame.image.load('game_over.png').convert_alpha()
+restar_button = pygame.image.load('restart_button.png').convert_alpha()
 
 image_map = {
     0: wall_image,        # Wall index = 0
@@ -67,6 +69,35 @@ image_map = {
     5: dinexplo_image,    # Dinexplo index = 5
     6: explo_image         # Explo index = 6
 }
+# function for game over screen
+
+
+def game_over_screen():
+    global ROOM_NUMBER, robo_pos
+    screen_gameover = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen_gameover.fill((255, 255, 255))
+    screen_gameover.blit(game_over, (44, 0))
+    screen_gameover.blit(restar_button, (119, 6 * CELL_SIZE))
+    button = pygame.Rect((119, 6 * CELL_SIZE), (50, 50))
+    pygame.display.update()
+    a = True
+    while a == True:
+        # Get events from the event queue
+        for event in pygame.event.get():
+            # Check for the quit event
+            if event.type == pygame.QUIT:
+                # Quit the game
+                pygame.quit()
+                sys.exit()
+
+            # Check for the mouse button down event
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and button.collidepoint(event.pos):
+                    ROOM_NUMBER = 0
+                    draw_board(room[ROOM_NUMBER])
+                    robo_pos = [0, 4]
+                    a = False
+
 
 # Create a 2D list representing the board
 board = [[0 for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
@@ -100,7 +131,7 @@ def draw_board(room):
 
 
 # Draw a grid
-draw_board(room[0])
+draw_board(room[ROOM_NUMBER])
 
 
 def draw_screenboard(board):
@@ -117,8 +148,11 @@ def draw_screenboard(board):
             elif cell == 4:
                 screen.blit(dinamico_image, (col_index *
                             CELL_SIZE, row_index * CELL_SIZE))
-            elif cell == 9:
+            elif cell == 5:
                 screen.blit(dinexplo_image, (col_index *
+                            CELL_SIZE, row_index * CELL_SIZE))
+            elif cell == 6:
+                screen.blit(explo_image, (col_index *
                             CELL_SIZE, row_index * CELL_SIZE))
 
     # Place door images on specific positions
@@ -126,6 +160,10 @@ def draw_screenboard(board):
         screen.blit(
             door_image, (door_pos[0] * CELL_SIZE, door_pos[1] * CELL_SIZE))
         board[door_pos[1]][door_pos[0]] = 2  # Set board position as a door
+
+
+for row in board:
+    print(row)
 
 
 def move_robot(dx, dy):
@@ -137,7 +175,12 @@ def move_robot(dx, dy):
         if board[new_y][new_x] == 4:
             last_position = find_last_position(new_x, new_y, dx, dy)
             if last_position and board[last_position[1]][last_position[0]] != 2:
-                board[last_position[1]][last_position[0]] = 4
+                if board[last_position[1]][last_position[0]] == 5:
+                    board[last_position[1]][last_position[0]] == 3
+                elif board[last_position[1]][last_position[0]] == 6:
+                    board[last_position[1]][last_position[0]] = 3
+                else:
+                    board[last_position[1]][last_position[0]] = 4
                 board[robo_pos[1]][robo_pos[0]] = 3
                 robo_pos[0] = new_x
                 robo_pos[1] = new_y
@@ -153,6 +196,19 @@ def move_robot(dx, dy):
             robo_pos[0] = new_x - (8*dx)
             robo_pos[1] = new_y
             draw_board(room[ROOM_NUMBER])
+        elif board[new_y][new_x] == 5:
+            if board[new_y+(dy)][new_x+(dx)] != 2 and board[new_y+(dy)][new_x+(dx)] != 0:
+                if board[new_y+(dy)][new_x+(dx)] == 4 or board[new_y+(dy)][new_x+(dx)] == 5:
+                    time.sleep(0.10)
+                    board[new_y+(dy)][new_x+(dx)] = 3
+                else:
+                    board[new_y+(dy)][new_x+(dx)] = 5
+                board[robo_pos[1]][robo_pos[0]] = 3
+                robo_pos[0] = new_x
+                robo_pos[1] = new_y
+                board[robo_pos[1]][robo_pos[0]] = 1
+        elif board[new_y][new_x] == 6:
+            game_over_screen()
 
 
 def find_last_position(x, y, dx, dy):
@@ -162,6 +218,8 @@ def find_last_position(x, y, dx, dy):
         elif board[y][x] == 4:
             x += dx
             y += dy
+        elif board[y][x] == 5 or board[y][x] == 6:
+            return [x, y]
         elif board[y][x] == 2 or board[y][x] == 0:
             break
     return None
@@ -195,7 +253,9 @@ while running:
                 move_robot(0, -1)
             elif event.key == pygame.K_DOWN:
                 move_robot(0, 1)
-
+            elif event.key == pygame.K_r:
+                draw_board(room[ROOM_NUMBER])
+                robo_pos = [0, 4]
             # Print grid to check if work
             for row in board:
                 print(row)
