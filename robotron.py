@@ -8,9 +8,19 @@ CELL_SIZE = 32
 BOARD_SIZE = 9
 HEIGHT = BOARD_SIZE * CELL_SIZE
 WIDTH = BOARD_SIZE * CELL_SIZE
-ROOM_NUMBER = 13
+ROOM_NUMBER = 0
 
 # makes a menu
+
+
+def roomcounter():
+    global ROOM_NUMBER
+    screen_room = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen_room.fill((255, 255, 255))
+    font = pygame.font.Font(None, 40)
+    text = font.render(f"room {ROOM_NUMBER + 1}", True, (0, 0, 0))
+    screen_room.blit(text, (85, 136))
+    pygame.display.flip()
 
 
 def menu():
@@ -24,7 +34,10 @@ def menu():
     screen_menu.blit(play_button, (119, 6 * CELL_SIZE))
     screen_menu.blit(logo, (16, 0))
     button = pygame.Rect((119, 6 * CELL_SIZE), (50, 50))
-    pygame.display.update()
+    font = pygame.font.Font(None, 25)
+    text = font.render("press r to reset the room", True, (0, 0, 0))
+    screen_menu.blit(text, (40, 140))
+    pygame.display.flip()
     a = True
     while a == True:
         # Get events from the event queue
@@ -44,7 +57,8 @@ def menu():
 
 
 menu()
-pygame.init()
+
+roomcounter()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Robotron")
 clock = pygame.time.Clock()
@@ -59,7 +73,11 @@ dinexplo_image = pygame.image.load('dinexplo.bmp').convert_alpha()
 explo_image = pygame.image.load('explo.bmp').convert_alpha()
 game_over = pygame.image.load('game_over.png').convert_alpha()
 restar_button = pygame.image.load('restart_button.png').convert_alpha()
-
+boom1 = pygame.image.load('boom1.bmp').convert_alpha()
+boom2 = pygame.image.load('boom2.bmp').convert_alpha()
+boom3 = pygame.image.load('boom3.bmp').convert_alpha()
+boom4 = pygame.image.load('boom4.bmp').convert_alpha()
+boom5 = pygame.image.load('boom5.bmp').convert_alpha()
 image_map = {
     0: wall_image,        # Wall index = 0
     1: robo_image,        # Robo index = 1
@@ -79,7 +97,7 @@ def game_over_screen():
     screen_gameover.blit(game_over, (44, 0))
     screen_gameover.blit(restar_button, (119, 6 * CELL_SIZE))
     button = pygame.Rect((119, 6 * CELL_SIZE), (50, 50))
-    pygame.display.update()
+    pygame.display.flip()
     a = True
     while a == True:
         # Get events from the event queue
@@ -169,16 +187,39 @@ for row in board:
 def move_robot(dx, dy):
     new_x = robo_pos[0] + dx
     new_y = robo_pos[1] + dy
-    global ROOM_NUMBER
+    global ROOM_NUMBER, boom1, boom2, boom3, boom4, boom5
 
     if 0 <= new_x < COLS and 0 <= new_y < ROWS and board[new_y][new_x] != 0:
         if board[new_y][new_x] == 4:
             last_position = find_last_position(new_x, new_y, dx, dy)
             if last_position and board[last_position[1]][last_position[0]] != 2:
-                if board[last_position[1]][last_position[0]] == 5:
-                    board[last_position[1]][last_position[0]] == 3
-                elif board[last_position[1]][last_position[0]] == 6:
-                    board[last_position[1]][last_position[0]] = 3
+                if board[last_position[1]][last_position[0]] == 6 or board[last_position[1]][last_position[0]] == 5:
+                    screen.blit(
+                        space_image, (new_x*CELL_SIZE, new_y*CELL_SIZE))
+                    screen.blit(
+                        boom1, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom2, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom3, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom4, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom5, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        space_image, (last_position[0]*CELL_SIZE, last_position[1]*CELL_SIZE))
+                    pygame.display.flip()
+                    board[new_y+(dy)][new_x+(dx)] = 3
                 else:
                     board[last_position[1]][last_position[0]] = 4
                 board[robo_pos[1]][robo_pos[0]] = 3
@@ -195,11 +236,37 @@ def move_robot(dx, dy):
             board[robo_pos[1]][robo_pos[0]] = 3
             robo_pos[0] = new_x - (8*dx)
             robo_pos[1] = new_y
+            roomcounter()
+            time.sleep(1)
             draw_board(room[ROOM_NUMBER])
         elif board[new_y][new_x] == 5:
             if board[new_y+(dy)][new_x+(dx)] != 2 and board[new_y+(dy)][new_x+(dx)] != 0:
                 if board[new_y+(dy)][new_x+(dx)] == 4 or board[new_y+(dy)][new_x+(dx)] == 5:
-                    time.sleep(0.10)
+                    screen.blit(
+                        space_image, (new_x*CELL_SIZE, new_y*CELL_SIZE))
+                    screen.blit(
+                        boom1, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom2, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom3, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom4, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        boom5, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
+                    pygame.display.flip()
+                    time.sleep(0.02)
+                    screen.blit(
+                        space_image, ((new_x+(dx))*CELL_SIZE, (new_y+(dy))*CELL_SIZE))
+                    pygame.display.flip()
                     board[new_y+(dy)][new_x+(dx)] = 3
                 else:
                     board[new_y+(dy)][new_x+(dx)] = 5
