@@ -18,7 +18,7 @@ def roomcounter():
     screen_room = pygame.display.set_mode((WIDTH, HEIGHT))
     screen_room.fill((255, 255, 255))
     font = pygame.font.Font(None, 40)
-    text = font.render(f"room {ROOM_NUMBER + 1}", True, (0, 0, 0))
+    text = font.render(f"ROOM {ROOM_NUMBER + 1}", True, (0, 0, 0))
     screen_room.blit(text, (85, 136))
     pygame.display.flip()
 
