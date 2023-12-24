@@ -8,9 +8,42 @@ CELL_SIZE = 32
 BOARD_SIZE = 9
 HEIGHT = BOARD_SIZE * CELL_SIZE
 WIDTH = BOARD_SIZE * CELL_SIZE
-ROOM_NUMBER=0
+ROOM_NUMBER = 0
 
-# Initialize Pygame
+# makes a menu
+
+
+def menu():
+    pygame.init()
+    screen_menu = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Menu_Robotron")
+    clock = pygame.time.Clock()
+    play_button = pygame.image.load('play_button.png').convert_alpha()
+    logo = pygame.image.load('logo2.png').convert_alpha()
+    screen_menu.fill((255, 255, 255))
+    screen_menu.blit(play_button, (4 * CELL_SIZE, 6 * CELL_SIZE))
+    screen_menu.blit(logo, (16, 0))
+    button = pygame.Rect((4 * CELL_SIZE, 6 * CELL_SIZE), (50, 50))
+    pygame.display.update()
+    a = True
+    while a == True:
+        # Get events from the event queue
+        for event in pygame.event.get():
+            # Check for the quit event
+            if event.type == pygame.QUIT:
+                # Quit the game
+                pygame.quit()
+                sys.exit()
+
+            # Check for the mouse button down event
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and button.collidepoint(event.pos):
+                    a = False
+
+    clock.tick(10)
+
+
+menu()
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Robotron")
@@ -23,7 +56,7 @@ door_image = pygame.image.load('door.bmp').convert_alpha()
 space_image = pygame.image.load('space.bmp').convert_alpha()
 dinamico_image = pygame.image.load('dinamico.bmp').convert_alpha()
 dinexplo_image = pygame.image.load('dinexplo.bmp').convert_alpha()
-explo_image = pygame.image.load('explo.bmp').convert_alpha()  
+explo_image = pygame.image.load('explo.bmp').convert_alpha()
 
 image_map = {
     0: wall_image,        # Wall index = 0
@@ -38,6 +71,8 @@ image_map = {
 # Create a 2D list representing the board
 board = [[0 for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
 # Function to draw the board with walls
+
+
 def draw_board(room):
     global board
 
@@ -51,20 +86,22 @@ def draw_board(room):
 
         if row != 8:
             if i == "0":
-                board[col][row] = 3 # space
+                board[col][row] = 3  # space
             elif i == "1":
-                board[col][row] = 0 # wall
+                board[col][row] = 0  # wall
             elif i == "2":
-                board[col][row] = 4 # dinamico
+                board[col][row] = 4  # dinamico
             elif i == "3":
-                board[col][row] = 6 # explo
+                board[col][row] = 6  # explo
             elif i == "4":
-                board[col][row] = 5 # dinexplo
+                board[col][row] = 5  # dinexplo
 
             row += 1
-                
+
+
 # Draw a grid
 draw_board(room[0])
+
 
 def draw_screenboard(board):
     door_positions = [(0, 4), (8, 4)]  # Define door positions
@@ -72,18 +109,24 @@ def draw_screenboard(board):
     for row_index, row in enumerate(board):
         for col_index, cell in enumerate(row):
             if cell == 3:
-                screen.blit(space_image, (col_index * CELL_SIZE, row_index * CELL_SIZE))
+                screen.blit(space_image, (col_index *
+                            CELL_SIZE, row_index * CELL_SIZE))
             elif cell == 0:
-                screen.blit(wall_image, (col_index * CELL_SIZE, row_index * CELL_SIZE))
+                screen.blit(wall_image, (col_index *
+                            CELL_SIZE, row_index * CELL_SIZE))
             elif cell == 4:
-                screen.blit(dinamico_image, (col_index * CELL_SIZE, row_index * CELL_SIZE))
+                screen.blit(dinamico_image, (col_index *
+                            CELL_SIZE, row_index * CELL_SIZE))
             elif cell == 9:
-                screen.blit(dinexplo_image, (col_index * CELL_SIZE, row_index * CELL_SIZE))
+                screen.blit(dinexplo_image, (col_index *
+                            CELL_SIZE, row_index * CELL_SIZE))
 
     # Place door images on specific positions
     for door_pos in door_positions:
-        screen.blit(door_image, (door_pos[0] * CELL_SIZE, door_pos[1] * CELL_SIZE))
+        screen.blit(
+            door_image, (door_pos[0] * CELL_SIZE, door_pos[1] * CELL_SIZE))
         board[door_pos[1]][door_pos[0]] = 2  # Set board position as a door
+
 
 def move_robot(dx, dy):
     new_x = robo_pos[0] + dx
@@ -104,12 +147,13 @@ def move_robot(dx, dy):
             board[robo_pos[1]][robo_pos[0]] = 3
             robo_pos[0] = new_x
             robo_pos[1] = new_y
-        elif board[new_y][new_x] == 2 and board[robo_pos[1]][robo_pos[0]-1] !=2:
-            ROOM_NUMBER+=1
+        elif board[new_y][new_x] == 2 and board[robo_pos[1]][robo_pos[0]-1] != 2:
+            ROOM_NUMBER += 1
             board[robo_pos[1]][robo_pos[0]] = 3
             robo_pos[0] = new_x - (8*dx)
             robo_pos[1] = new_y
             draw_board(room[ROOM_NUMBER])
+
 
 def find_last_position(x, y, dx, dy):
     while 0 <= x < COLS and 0 <= y < ROWS:
@@ -122,22 +166,22 @@ def find_last_position(x, y, dx, dy):
             break
     return None
 
+
 # Robo start position
 robo_pos = [0, 4]
 
 # Test
-#wall_pos = [4,4]
+# wall_pos = [4,4]
 running = True
 while running:
     # Fill the screen with white
-    screen.fill((255, 255, 255))  
+    screen.fill((255, 255, 255))
     # Draw board
     draw_screenboard(board)
-    
 
     # Place the robot at its current position
     screen.blit(robo_image, (robo_pos[0]*CELL_SIZE, robo_pos[1]*CELL_SIZE))
-    
+
     # Event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -151,17 +195,14 @@ while running:
                 move_robot(0, -1)
             elif event.key == pygame.K_DOWN:
                 move_robot(0, 1)
-                            
-                            
+
             # Print grid to check if work
             for row in board:
                 print(row)
             print("xxxxxxxxx")
-      
-    
+
     pygame.display.flip()
     clock.tick(10)
 
 pygame.quit()
 sys.exit()
-
