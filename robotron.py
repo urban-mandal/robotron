@@ -56,8 +56,12 @@ def menu():
     clock.tick(10)
 
 
+# menu
 menu()
+# inicialize mixer sound
 pygame.mixer.init()
+
+# create game window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Robotron")
 clock = pygame.time.Clock()
@@ -77,7 +81,7 @@ boom2 = pygame.image.load('boom2.bmp').convert_alpha()
 boom3 = pygame.image.load('boom3.bmp').convert_alpha()
 boom4 = pygame.image.load('boom4.bmp').convert_alpha()
 boom5 = pygame.image.load('boom5.bmp').convert_alpha()
-# sounds
+# load sounds
 boom = pygame.mixer.Sound('boomsound.wav')
 image_map = {
     0: wall_image,        # Wall index = 0
