@@ -247,7 +247,7 @@ def move_robot(dx, dy):
             draw_board(room[ROOM_NUMBER])
         elif board[new_y][new_x] == 5:
             if board[new_y+(dy)][new_x+(dx)] != 2 and board[new_y+(dy)][new_x+(dx)] != 0:
-                if board[new_y+(dy)][new_x+(dx)] == 4 or board[new_y+(dy)][new_x+(dx)] == 5:
+                if board[new_y+(dy)][new_x+(dx)] == 4 or board[new_y+(dy)][new_x+(dx)] == 5 or board[new_y+(dy)][new_x+(dx)] == 6:
                     screen.blit(
                         space_image, (new_x*CELL_SIZE, new_y*CELL_SIZE))
                     screen.blit(
