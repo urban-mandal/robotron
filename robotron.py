@@ -23,6 +23,64 @@ def roomcounter():
     pygame.display.flip()
 
 
+def leftoff_screen(data):
+    global ROOM_NUMBER
+    pygame.init()
+    screen_leftoff = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("left_off")
+    clock = pygame.time.Clock()
+    screen_leftoff.fill((255, 255, 255))
+    font = pygame.font.Font(None, 30)
+    text = font.render(
+        f"Do you wish to start where", True, (0, 0, 0))
+    text2 = font.render(
+        f"you have left off?", True, (0, 0, 0))
+    screen_leftoff.blit(text, (17, 50))
+    screen_leftoff.blit(text2, (50, 75))
+    # yes and no button
+    yes = font.render(f"yes", True, (0, 0, 0))
+    no = font.render(f"no", True, (0, 0, 0))
+    screen_leftoff.blit(yes, (50, 175))
+    screen_leftoff.blit(no, (200, 175))
+    button_yes = pygame.Rect((50, 175), (30, 40))
+    button_no = pygame.Rect((200, 175), (25, 40))
+    # room num blit
+    room_num = font.render(f"ROOM {data}", True, (0, 0, 0))
+    screen_leftoff.blit(room_num, (85, 125))
+    pygame.display.flip()
+    a = True
+    while a == True:
+        # Get events from the event queue
+        for event in pygame.event.get():
+            # Check for the quit event
+            if event.type == pygame.QUIT:
+                # Quit the game
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and button_yes.collidepoint(event.pos):
+                    ROOM_NUMBER = int(data)
+                    a = False
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and button_no.collidepoint(event.pos):
+                    ROOM_NUMBER = 0
+                    a = False
+    clock.tick(10)
+
+
+def start_leftoff():
+    file = open('storage.txt', 'r+')
+    data = file.read()
+    leftoff_screen(data)
+    file.close()
+
+
+def storage_update():
+    global ROOM_NUMBER
+    file = open('storage.txt', 'w')
+    file.write(f'{ROOM_NUMBER}')
+    file.close()
+
+
 def menu():
     pygame.init()
     screen_menu = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -53,6 +111,7 @@ def menu():
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and button.collidepoint(event.pos):
                     a = False
 
+    start_leftoff()
     clock.tick(10)
 
 
@@ -243,8 +302,10 @@ def move_robot(dx, dy):
             robo_pos[0] = new_x - (8*dx)
             robo_pos[1] = new_y
             roomcounter()
+            storage_update()
             time.sleep(1)
             draw_board(room[ROOM_NUMBER])
+
         elif board[new_y][new_x] == 5:
             if board[new_y+(dy)][new_x+(dx)] != 2 and board[new_y+(dy)][new_x+(dx)] != 0:
                 if board[new_y+(dy)][new_x+(dx)] == 4 or board[new_y+(dy)][new_x+(dx)] == 5 or board[new_y+(dy)][new_x+(dx)] == 6:
