@@ -1,17 +1,17 @@
 # Robotron
 **To run you first need to install the requirements:**
 
-Install Python.
-Run this in terminal:
+1. Install Python.
+2. Run this in terminal:
 ```
 git clone https://github.com/Strela196/robotron.git
 ```
-1. go to robotron folder
-2. run 
+3. go to robotron folder
+4. run 
 ```
 pip install -r requirements.txt
 ```
-3. then run 
+5. then run 
 ```
 python robotron.py
 ```
