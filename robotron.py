@@ -27,7 +27,7 @@ def leftoff_screen(data):
     global ROOM_NUMBER
     pygame.init()
     screen_leftoff = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("left_off")
+    pygame.display.set_caption("Left_off")
     clock = pygame.time.Clock()
     screen_leftoff.fill((255, 255, 255))
     font = pygame.font.Font(None, 30)
@@ -93,7 +93,7 @@ def menu():
     screen_menu.blit(logo, (16, 0))
     button = pygame.Rect((119, 6 * CELL_SIZE), (50, 50))
     font = pygame.font.Font(None, 25)
-    text = font.render("press r to reset the room", True, (0, 0, 0))
+    text = font.render("Press R to reset the room", True, (0, 0, 0))
     screen_menu.blit(text, (40, 140))
     pygame.display.flip()
     a = True
@@ -392,9 +392,9 @@ while running:
                 draw_board(room[ROOM_NUMBER])
                 robo_pos = [0, 4]
             # Print grid to check if work
-            for row in board:
-                print(row)
-            print("xxxxxxxxx")
+            # for row in board:
+            #     print(row)
+            # print("xxxxxxxxx")
 
     pygame.display.flip()
     clock.tick(10)
